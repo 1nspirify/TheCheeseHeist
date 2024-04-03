@@ -79,6 +79,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d46d51cccdd8d7c4abbd418611add4a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Prefab: {fileID: 4846717269581090762}
   objectAppeared: {fileID: 4937884044850069264}
   StartPos: {fileID: 7582381406863138318}
   EndPos: {fileID: 5283611468168642208}
