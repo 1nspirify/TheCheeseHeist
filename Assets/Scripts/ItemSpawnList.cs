@@ -52,7 +52,7 @@ public class ItemSpawnList : MonoBehaviour
         // Вероятности должны суммироваться до 1.0
         // Вероятности можно настроить в соответствии с вашими требованиями
         // Возвращаем массив вероятностей
-        return new float[] { 0.85f, 0.05f, 0.05f, 0.05f };
+        return new float[] { 0.85f, 0.85f, 0.05f, 0.05f };
     }
 
     private int PickOne(float[] prob)

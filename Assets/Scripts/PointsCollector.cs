@@ -10,11 +10,11 @@ public class PointsCollector : MonoBehaviour
 
     public int Points = 0;
     public int GreyMouse;
-    public int BlackMouse;
-    public int WhiteMouse;
+    public int BlackMouse = 10;
+    public int WhiteMouse = 15;
 
     // Start is called before the first frame update
-    void Start()
+    void Update()
     {
         PointsCollectorText.text = "POINTS: " + Points.ToString();
     }
@@ -22,7 +22,8 @@ public class PointsCollector : MonoBehaviour
  
     public void PointsAdd()
     {
-        Points += BlackMouse; 
+        Points += BlackMouse;
+        Debug.Log("Points added: " + Points);
     }
 
     public void PointsRemove()

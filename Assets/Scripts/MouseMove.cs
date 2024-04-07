@@ -8,7 +8,8 @@ public class MouseMove : MonoBehaviour
     public Transform objectAppeared;
     public Transform StartPos;
     public Transform EndPos;
-    public int Multiplier = 2; 
+    public int Multiplier = 2;
+    public float DestroyTimer = 1.5f;
 
     // Добавим флаг, чтобы определить направление движения
     private bool movingForward = true;
@@ -34,6 +35,6 @@ public class MouseMove : MonoBehaviour
         float moveSpeed = 0.2f*Multiplier * Time.deltaTime;
         Vector3 moveDirection = movingForward ? Vector3.forward : Vector3.back;
         objectAppeared.Translate(moveDirection * moveSpeed);
-        Destroy(Prefab ,1.5f);
+        Destroy(Prefab , DestroyTimer);
     }
 }

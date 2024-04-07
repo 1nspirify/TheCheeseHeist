@@ -1,18 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TouchScript.Gestures;
 
 public class ObjectInterAction : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    // Создаем событие для нажатия
+    public event System.Action OnObjectTapped;
+
+    private void OnEnable()
     {
-        
+        // Подписываемся на событие нажатия
+        GetComponent<TapGesture>().Tapped += OnTapped;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
     {
-        
+        // Отписываемся от события нажатия
+        GetComponent<TapGesture>().Tapped -= OnTapped;
+    }
+
+    private void OnTapped(object sender, System.EventArgs e)
+    {
+        // Вызываем событие нажатия
+        OnObjectTapped?.Invoke();
+       
     }
 }
