@@ -10,6 +10,7 @@ public class MiceAdditionEvents : MonoBehaviour
     private void Start()
     {
         _pointsCollector = FindObjectOfType<PointsCollector>();
+        GetComponent<ObjectInterAction>().OnObjectTapped += HandleObjectTapped;
     }
 
     // Override the HandleObjectTapped method
