@@ -10,6 +10,7 @@ public class SWAdditionEvents : MonoBehaviour
     private void Start()
     {
         _timeSpeedUp = FindObjectOfType<TimeSpeedUp>();
+        GetComponent<ObjectInterAction>().OnObjectTapped += HandleObjectTapped;
     }
 
     // Override the HandleObjectTapped method
