@@ -8,6 +8,7 @@ public class TimeSpeedUp : MonoBehaviour
     public GameObject Boost;
     private float originalTimeScale;
     [SerializeField] private float countdown = 7.5f;
+    public float TimeScale =1.95f;
 
     public void TimeBooster()
     {
@@ -17,7 +18,7 @@ public class TimeSpeedUp : MonoBehaviour
 
     private void BoostTime()
     {
-        Time.timeScale = 3f;
+        Time.timeScale = TimeScale;
         Boost.SetActive(true);
         StartCoroutine(RestoreTime());
     }

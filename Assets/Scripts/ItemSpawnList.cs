@@ -2,69 +2,59 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class ItemSpawnList : MonoBehaviour
 {
-    public List<GameObject> models; // —писок с модел€ми
-    public List<Transform> spawnPoints; // —писок (spawn points)
-    public float spawnInterval = 2f; // »нтервал между по€влением моделей
+    public GameObject[] objectsToSpawn; // массив объектов дл€ спавна
+    public Transform[] spawnPoints; // точки респавна
+    public float[] spawnChances; // веро€тности по€влени€ дл€ каждого объекта
+    public float spawnTimeMin = 1f; // минимальное врем€ между спавнами
+    public float spawnTimeMax = 5f; // максимальное врем€ между спавнами
+
+    private int lastSpawnPointIndex = -1; // »ндекс последней точки респавна
 
     private void Start()
     {
-        // «апускаем корутину дл€ случайного по€влени€ моделей
-        StartCoroutine(SpawnRandomModel());
+        Invoke("SpawnObject", Random.Range(spawnTimeMin, spawnTimeMax));
     }
 
-    private IEnumerator SpawnRandomModel()
+    private void SpawnObject()
     {
-        while (true)
+        if (objectsToSpawn.Length != spawnChances.Length)
         {
-            // ¬ыбираем случайный пустой объект (spawn point)
-            Transform spawnPoint = GetRandomSpawnPoint();
-
-            // ¬ыбираем случайный индекс модели на основе веро€тностей
-            int randomModelIndex = PickOne(GetModelProbabilities());
-
-            // —оздаем модель из списка с выбранным индексом
-            GameObject randomModel = models[randomModelIndex];
-
-            // ѕо€вление модели в выбранной точке
-            Instantiate(randomModel, spawnPoint.position, spawnPoint.rotation);
-
-            // «адаем случайный интервал до следующего по€влени€
-            float randomSpawnInterval = Random.Range(spawnInterval * 0.5f, spawnInterval * 1.5f);
-            yield return new WaitForSeconds(randomSpawnInterval);
+            Debug.LogError("ќшибка: массивы objectsToSpawn и spawnChances должны быть одинаковой длины!");
+            return;
         }
-    }
 
-    private Transform GetRandomSpawnPoint()
-    {
-        // ¬ыбираем случайный индекс из списка spawnPoints
-        int randomIndex = Random.Range(0, spawnPoints.Count);
-        return spawnPoints[randomIndex];
-    }
-
-    private float[] GetModelProbabilities()
-    {
-        // «десь вы можете задать веро€тности дл€ каждой модели
-        // Ќапример, если у вас есть 4 модели, вы можете задать их веро€тности как {0.85f, 0.05f, 0.05f, 0.05f}
-        // Ёто будет соответствовать 85% веро€тности дл€ первой модели и 5% дл€ каждой из остальных трех
-        // ¬еро€тности должны суммироватьс€ до 1.0
-        // ¬еро€тности можно настроить в соответствии с вашими требовани€ми
-        // ¬озвращаем массив веро€тностей
-        return new float[] { 0.85f, 0.85f, 0.05f, 0.05f };
-    }
-
-    private int PickOne(float[] prob)
-    {
-        int index = 0;
-        float r = Random.value;
-        while (r > 0)
+        float totalChance = 0f;
+        foreach (var chance in spawnChances)
         {
-            r -= prob[index];
-            index++;
+            totalChance += chance;
         }
-        index--;
-        return index;
+
+        float randomPoint = Random.Range(0, totalChance);
+        int objectIndex = 0;
+
+        for (float currentChance = spawnChances[0]; objectIndex < spawnChances.Length - 1; objectIndex++)
+        {
+            if (randomPoint < currentChance)
+                break;
+
+            currentChance += spawnChances[objectIndex + 1];
+        }
+
+        int spawnPointIndex = Random.Range(0, spawnPoints.Length);
+
+        // ѕровер€ем, чтобы нова€ точка респавна не совпадала с последней использованной
+        while (spawnPointIndex == lastSpawnPointIndex)
+        {
+            spawnPointIndex = Random.Range(0, spawnPoints.Length);
+        }
+
+        lastSpawnPointIndex = spawnPointIndex; // ќбновл€ем последнюю использованную точку респавна
+
+        Vector3 spawnDirection = spawnPoints[spawnPointIndex].forward; // ѕолучаем направление по оси Z от точки респавна
+        Instantiate(objectsToSpawn[objectIndex], spawnPoints[spawnPointIndex].position, Quaternion.LookRotation(spawnDirection));
+
+        Invoke("SpawnObject", Random.Range(spawnTimeMin, spawnTimeMax));
     }
 }

@@ -8,33 +8,42 @@ public class MouseMove : MonoBehaviour
     public Transform objectAppeared;
     public Transform StartPos;
     public Transform EndPos;
-    public int Multiplier = 2;
-    public float DestroyTimer = 1.5f;
 
-    // Добавим флаг, чтобы определить направление движения
+    public float DestroyTimer = 1.5f;
+    public float ObjectSpeed = 1f;
+    public float DelayAtEnd = 0.5f; // Переменная для задержки у EndPos
+
     private bool movingForward = true;
+    private bool isWaiting = false; // Флаг для проверки, находится ли объект в состоянии ожидания
 
     void Update()
     {
+        if (isWaiting) return; // Если объект ожидает, не выполняем остальной код
+
         Vector3 EndPosPoint = EndPos.localPosition;
         Vector3 StartPosPoint = StartPos.localPosition;
         Vector3 MousePoint = objectAppeared.localPosition;
 
-        // Если объект достиг точки EndPos, меняем направление на обратное
         if (MousePoint.z >= EndPosPoint.z && movingForward)
         {
-            movingForward = false;
+            StartCoroutine(WaitAtEnd());
         }
-        // Если объект достиг точки StartPos, меняем направление на вперед
         else if (MousePoint.z <= StartPosPoint.z && !movingForward)
         {
             movingForward = true;
         }
 
-        // Двигаем объект в зависимости от текущего направления
-        float moveSpeed = 0.2f*Multiplier * Time.deltaTime;
+        float moveSpeed = ObjectSpeed * Time.deltaTime;
         Vector3 moveDirection = movingForward ? Vector3.forward : Vector3.back;
         objectAppeared.Translate(moveDirection * moveSpeed);
-        Destroy(Prefab , DestroyTimer);
+        Destroy(Prefab, DestroyTimer);
+    }
+
+    IEnumerator WaitAtEnd()
+    {
+        isWaiting = true; // Устанавливаем флаг ожидания
+        yield return new WaitForSeconds(DelayAtEnd); // Ожидаем установленное время
+        movingForward = false; // Меняем направление движения
+        isWaiting = false; // Снимаем флаг ожидания
     }
 }

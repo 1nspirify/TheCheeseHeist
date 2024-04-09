@@ -1,0 +1,50 @@
+using System.Collections;
+using UnityEngine;
+using UnityEngine.UI;
+
+
+public class CountdownTimer : MonoBehaviour
+{
+    public Text Instructions;
+    public Text countdownText; // Ссылка на текстовое поле для отображения времени
+    public Text StartText;
+
+    private void Start()
+    {
+        // Устанавливаем TimeScale на 0 при старте
+        Time.timeScale = 0f;
+
+        StartCoroutine(StartCountdown());
+    }
+
+    private IEnumerator StartCountdown()
+    {
+        int timeLeft = 5; // Начальное значение таймера
+
+        // Пока оставшееся время больше или равно нулю
+        while (timeLeft >= 1)
+        {
+            // Отображаем текущее время в текстовом поле
+            countdownText.text = timeLeft.ToString();
+
+            // Ждем одну секунду
+            yield return new WaitForSecondsRealtime(1f);
+
+            // Уменьшаем оставшееся время на одну секунду
+            timeLeft--;
+        }
+
+        // После завершения обратного отсчета можно выполнить какие-либо действия
+        // Например, запустить функцию, которая должна выполняться по завершении таймера
+        Debug.Log("Время вышло!");
+        countdownText.gameObject.SetActive(false);
+        Instructions.gameObject.SetActive(false);
+        StartText.gameObject.SetActive(true);
+        Destroy(StartText, 0.4f);
+        
+        
+
+        // Включаем TimeScale до 1 после завершения корутины
+        Time.timeScale = 1f;
+    }
+}

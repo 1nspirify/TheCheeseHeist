@@ -10,8 +10,8 @@ public class PointsCollector : MonoBehaviour
 
     public int Points = 0;
     public int GreyMouse;
-    public int BlackMouse = 10;
-    public int WhiteMouse = 15;
+    public int BlackMouse = 15;
+    public int WhiteMouse = 10;
 
     // Start is called before the first frame update
     void Update()
